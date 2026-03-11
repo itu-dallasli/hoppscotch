@@ -113,16 +113,6 @@ services:
       - "3200:3200"
       - "3080:80"
 
-  # Webhook listener for audit logs — runs inside the Podman network
-  webhook-listener:
-    profiles: ["default"]
-    container_name: webhook-listener
-    build:
-      dockerfile: Dockerfile.webhook
-      context: .
-    ports:
-      - "4000:4000"
-
   # Profile with no database dependency (purely developmental)
   hoppscotch-aio-no-db:
     profiles: ["default-no-db"]
@@ -165,8 +155,6 @@ services:
       # NOTE: Please UPDATE THIS PASSWORD!
       POSTGRES_PASSWORD: testpass
       POSTGRES_DB: hoppscotch
-    volumes:
-      - db-data:/var/lib/postgresql/data
     healthcheck:
       test:
         [
@@ -267,6 +255,3 @@ services:
 #
 # Remember: The default and default-no-db profiles should not be mixed with individual service
 # profiles as they would conflict on ports.
-
-volumes:
-  db-data:

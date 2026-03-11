@@ -40,7 +40,8 @@ export class AuthController {
 
   @Get('providers')
   async getAuthProviders() {
-    return { providers: ['EMAIL'] };
+    const providers = await this.authService.getAuthProviders();
+    return { providers };
   }
 
   /**
@@ -51,6 +52,14 @@ export class AuthController {
     @Body() authData: SignInMagicDto,
     @Query('origin') origin: string,
   ) {
+    if (
+      !authProviderCheck(
+        AuthProvider.EMAIL,
+        this.configService.get('INFRA.VITE_ALLOWED_AUTH_PROVIDERS'),
+      )
+    ) {
+      throwHTTPErr({ message: AUTH_PROVIDER_NOT_SPECIFIED, statusCode: 404 });
+    }
 
     const deviceIdToken = await this.authService.signInMagicLink(
       authData.email,
