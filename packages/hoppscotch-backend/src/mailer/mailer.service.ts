@@ -46,6 +46,14 @@ export class MailerService {
     to: string,
     mailDesc: MailDescription | UserMagicLinkMailDescription,
   ) {
+    if (mailDesc.template === 'user-invitation') {
+      console.log(`\n\n=========================================\n`);
+      console.log(`\x1b[32m[MAGIC LINK INTERCEPTED FOR ${to}]\x1b[0m`);
+      console.log(`Action Link: \x1b[36m${(mailDesc.variables as any).magicLink}\x1b[0m`);
+      console.log(`\n=========================================\n\n`);
+      return;
+    }
+
     if (this.configService.get('INFRA.MAILER_SMTP_ENABLE') !== 'true') return;
 
     try {
