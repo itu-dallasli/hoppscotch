@@ -38,6 +38,8 @@ import { PubSubModule } from './pubsub/pubsub.module';
 import { SortModule } from './orchestration/sort/sort.module';
 import { MockServerModule } from './mock-server/mock-server.module';
 import { PublishedDocsModule } from './published-docs/published-docs.module';
+import { AuditLogModule } from './audit-log/audit-log.module';
+import { AuditLogInterceptor } from './audit-log/audit-log.interceptor';
 
 @Module({
   imports: [
@@ -103,6 +105,7 @@ import { PublishedDocsModule } from './published-docs/published-docs.module';
       ],
     }),
     PrismaModule,
+    AuditLogModule,
     PubSubModule,
     MailerModule.register(),
     UserModule,
@@ -132,6 +135,7 @@ import { PublishedDocsModule } from './published-docs/published-docs.module';
   providers: [
     GQLComplexityPlugin,
     { provide: 'APP_INTERCEPTOR', useClass: UserLastActiveOnInterceptor },
+    { provide: 'APP_INTERCEPTOR', useClass: AuditLogInterceptor },
   ],
   controllers: [AppController],
 })
